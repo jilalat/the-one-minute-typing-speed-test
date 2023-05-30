@@ -64,12 +64,12 @@ let necessaryParagraphsToShowSplitted = [];
     };
     
 const initiateTypingTest = () => {
-      input.focus()
-      generatedParagraph.innerHTML = '';
-      extractNecessaryParagraphsToShow();
-      splitParagraphs();
-      fillParagraph(necessaryParagraphsToShowSplitted.slice(0, MAX_CHARACTERS_SHOWN_IN_PAGE));
-      generatedParagraph.firstElementChild.classList.add(...ACTIVE_CLASSES);
+  generatedParagraph.innerHTML = '';
+  extractNecessaryParagraphsToShow();
+  splitParagraphs();
+  fillParagraph(necessaryParagraphsToShowSplitted.slice(0, MAX_CHARACTERS_SHOWN_IN_PAGE));
+  generatedParagraph.firstElementChild.classList.add(...ACTIVE_CLASSES);
+  input.focus()
     };
     
     refresh.addEventListener('click', () => {
@@ -84,33 +84,28 @@ const initiateTypingTest = () => {
     // } else {
     //   console.log('no');
     // }
-  window.addEventListener('keypress', e => {
-    const firstGeneratedCharacters = document.querySelector('#generatedParagraph span');
+  // window.addEventListener('keypress', e => {
+  //   const firstGeneratedCharacters = document.querySelector('#generatedParagraph span');
 
-      if (e.key === firstGeneratedCharacters.textContent) {
-        e.key === ' ' ? outputtedParagraph.classList.add('pe-3') : outputtedParagraph.classList.remove('pe-3')
-        necessaryParagraphsToShowSplitted.shift();
-        insertCharacter(necessaryParagraphsToShowSplitted[MAX_CHARACTERS_SHOWN_IN_PAGE - 1], generatedParagraph)
-        necessaryParagraphsToShowSplitted.slice(0, MAX_CHARACTERS_SHOWN_IN_PAGE)[0] === ' '
-        ? firstGeneratedCharacters.nextElementSibling.classList.add(...SPACE_CLASSES)
-        : firstGeneratedCharacters.nextElementSibling.classList.add(...ACTIVE_CLASSES);
-        firstGeneratedCharacters.remove();
-        insertCharacter(e.key, outputtedParagraph)
-      } else {
-        firstGeneratedCharacters.classList.add('error');
-      }
-  });
+  //     if (e.key === firstGeneratedCharacters.textContent) {
+  //       e.key === ' ' ? outputtedParagraph.classList.add('pe-3') : outputtedParagraph.classList.remove('pe-3')
+  //       necessaryParagraphsToShowSplitted.shift();
+  //       insertCharacter(necessaryParagraphsToShowSplitted[MAX_CHARACTERS_SHOWN_IN_PAGE - 1], generatedParagraph)
+  //       necessaryParagraphsToShowSplitted.slice(0, MAX_CHARACTERS_SHOWN_IN_PAGE)[0] === ' '
+  //       ? firstGeneratedCharacters.nextElementSibling.classList.add(...SPACE_CLASSES)
+  //       : firstGeneratedCharacters.nextElementSibling.classList.add(...ACTIVE_CLASSES);
+  //       firstGeneratedCharacters.remove();
+  //       insertCharacter(e.key, outputtedParagraph)
+  //     } else {
+  //       firstGeneratedCharacters.classList.add('error');
+  //     }
+  // });
 
-input.addEventListener('blur', e => { input.focus()})
+input.addEventListener('blur', () => { input.focus()})
     input.addEventListener('input', e => {
       const firstGeneratedCharacters = document.querySelector('#generatedParagraph span');
       Text = e.target.value;
       let typedText = e.target.value;
-  //       if (input.focus()) {
-  //   console.log('yuuup');
-  // } else {
-  //   console.log('no');
-  // }
       if (
         firstGeneratedCharacters.textContent === typedText[typedText.length - 1]
       ) {
