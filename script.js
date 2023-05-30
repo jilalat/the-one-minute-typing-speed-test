@@ -4,7 +4,7 @@ let refresh = document.querySelector('.refresh');
 
 const LIMIT_OF_GENERATED_PARAGRAPHS = 150;
 const LIMIT_OF_SHOWN_PARAGRAPHS = 8;
-const MAX_CHARACTERS_SHOWN_IN_PAGE = 150;
+const MAX_CHARACTERS_SHOWN_IN_PAGE = 72;
 const ACTIVE_CLASSES = ['active', 'position-relative'];
 const SPACE_CLASSES = [
   'space',
@@ -16,108 +16,90 @@ const SPACE_CLASSES = [
 
 let collectedParagraphsFromApi = [];
 let necessaryParagraphsToShow = [];
-let necessaryParagraphsToShowSplitted = [];
-// let splittedParagraphsToShow = [];
+let splittedNecessaryParagraphsToShow = [];
 
-// const createRequest = () => {
-  fetch(`https://api.quotable.io/quotes?limit=${LIMIT_OF_GENERATED_PARAGRAPHS}`)
+fetch(`https://api.quotable.io/quotes?limit=${LIMIT_OF_GENERATED_PARAGRAPHS}`)
   .then(response => response.json())
   .then(data => {
     for (result in data.results) {
       collectedParagraphsFromApi.push(data.results[result].content);
     }
   })
-  // .then(() => console.log(collectedParagraphsFromApi))
-  // .then(() => console.log(necessaryParagraphsToShow))
   .then(() => initiateTypingTest());
-  // .then(() => initiateTypingTest());
-  // };
-  
-  // createRequest();
-  
-  const extractNecessaryParagraphsToShow = () => {
-    for (i = 0; i < LIMIT_OF_SHOWN_PARAGRAPHS; i++) {
-      const randomIndex = Math.floor(
-        Math.random() * LIMIT_OF_GENERATED_PARAGRAPHS
-        );
-        necessaryParagraphsToShow.push(collectedParagraphsFromApi[randomIndex]);
-      }
-    };
-    
-    const splitParagraphs = () => {
-      let paragraphsToSplit = necessaryParagraphsToShow.join(' ').split('');
-      for (i = 0; i < paragraphsToSplit.length; i++) {
-        necessaryParagraphsToShowSplitted.push(paragraphsToSplit[i]);
-      }
-    };
-    
-    const insertCharacter = (character, parent) => {
-      const characterWrapper = document.createElement('span');
-      characterWrapper.innerText = character;
-      parent.appendChild(characterWrapper);
-    }
-    
-    const fillParagraph = splittedParagraphs => {
-      splittedParagraphs.forEach(character => {
-        insertCharacter(character, generatedParagraph)
-      });
-    };
-    
+
+const extractNecessaryParagraphsToShow = () => {
+  for (i = 0; i < LIMIT_OF_SHOWN_PARAGRAPHS; i++) {
+    const randomIndex = Math.floor(
+      Math.random() * LIMIT_OF_GENERATED_PARAGRAPHS
+    );
+    necessaryParagraphsToShow.push(collectedParagraphsFromApi[randomIndex]);
+  }
+};
+
+const splitParagraphs = () => {
+  let paragraphsToSplit = necessaryParagraphsToShow.join(' ').split('');
+  for (i = 0; i < paragraphsToSplit.length; i++) {
+    splittedNecessaryParagraphsToShow.push(paragraphsToSplit[i]);
+  }
+};
+
+const insertCharacter = (character, parent) => {
+  const characterWrapper = document.createElement('span');
+  characterWrapper.innerText = character;
+  parent.appendChild(characterWrapper);
+};
+
+const fillParagraph = splittedParagraphs => {
+  splittedParagraphs.forEach(character => {
+    insertCharacter(character, generatedParagraph);
+  });
+};
+
 const initiateTypingTest = () => {
   generatedParagraph.innerHTML = '';
   extractNecessaryParagraphsToShow();
   splitParagraphs();
-  fillParagraph(necessaryParagraphsToShowSplitted.slice(0, MAX_CHARACTERS_SHOWN_IN_PAGE));
+  fillParagraph(
+    splittedNecessaryParagraphsToShow.slice(0, MAX_CHARACTERS_SHOWN_IN_PAGE)
+  );
   generatedParagraph.firstElementChild.classList.add(...ACTIVE_CLASSES);
-  input.focus()
-    };
-    
-    refresh.addEventListener('click', () => {
-      necessaryParagraphsToShow = [];
-      necessaryParagraphsToShowSplitted = [];
-      outputtedParagraph.textContent = '';
-      initiateTypingTest();
-    });
+  input.focus();
+  input.value = '';
+};
 
-    // if (document.activeElement.tagName === "INPUT") {
-    //   console.log('yuuup');
-    // } else {
-    //   console.log('no');
-    // }
-  // window.addEventListener('keypress', e => {
-  //   const firstGeneratedCharacters = document.querySelector('#generatedParagraph span');
+refresh.addEventListener('click', () => {
+  necessaryParagraphsToShow = [];
+  splittedNecessaryParagraphsToShow = [];
+  outputtedParagraph.textContent = '';
+  initiateTypingTest();
+});
 
-  //     if (e.key === firstGeneratedCharacters.textContent) {
-  //       e.key === ' ' ? outputtedParagraph.classList.add('pe-3') : outputtedParagraph.classList.remove('pe-3')
-  //       necessaryParagraphsToShowSplitted.shift();
-  //       insertCharacter(necessaryParagraphsToShowSplitted[MAX_CHARACTERS_SHOWN_IN_PAGE - 1], generatedParagraph)
-  //       necessaryParagraphsToShowSplitted.slice(0, MAX_CHARACTERS_SHOWN_IN_PAGE)[0] === ' '
-  //       ? firstGeneratedCharacters.nextElementSibling.classList.add(...SPACE_CLASSES)
-  //       : firstGeneratedCharacters.nextElementSibling.classList.add(...ACTIVE_CLASSES);
-  //       firstGeneratedCharacters.remove();
-  //       insertCharacter(e.key, outputtedParagraph)
-  //     } else {
-  //       firstGeneratedCharacters.classList.add('error');
-  //     }
-  // });
+input.addEventListener('blur', () => {
+  input.focus();
+});
 
-input.addEventListener('blur', () => { input.focus()})
-    input.addEventListener('input', e => {
-      const firstGeneratedCharacters = document.querySelector('#generatedParagraph span');
-      Text = e.target.value;
-      let typedText = e.target.value;
-      if (
-        firstGeneratedCharacters.textContent === typedText[typedText.length - 1]
-      ) {
-        typedText[typedText.length - 1] === " " ? outputtedParagraph.classList.add('pe-3') : outputtedParagraph.classList.remove('pe-3')
-        necessaryParagraphsToShowSplitted.shift();
-        insertCharacter(necessaryParagraphsToShowSplitted[MAX_CHARACTERS_SHOWN_IN_PAGE - 1], generatedParagraph)
-        necessaryParagraphsToShowSplitted.slice(0, MAX_CHARACTERS_SHOWN_IN_PAGE)[0] === ' '
-          ? firstGeneratedCharacters.nextElementSibling.classList.add(...SPACE_CLASSES)
-          : firstGeneratedCharacters.nextElementSibling.classList.add(...ACTIVE_CLASSES);
-        firstGeneratedCharacters.remove();
-        insertCharacter(typedText[typedText.length - 1], outputtedParagraph)
-      } else {
-        firstGeneratedCharacters.classList.add('error');
-      }
-    });
+input.addEventListener('input', e => {
+  const firstCharacter = generatedParagraph.firstChild;
+  let typedText = e.target.value;
+  
+  if (firstCharacter.textContent === typedText[typedText.length - 1]) {
+    typedText[typedText.length - 1] === ' '
+      ? outputtedParagraph.classList.add('pe-3')
+      : outputtedParagraph.classList.remove('pe-3');
+    splittedNecessaryParagraphsToShow.shift();
+    insertCharacter(
+      splittedNecessaryParagraphsToShow[MAX_CHARACTERS_SHOWN_IN_PAGE - 1],
+      generatedParagraph
+    );
+    splittedNecessaryParagraphsToShow.slice(
+      0,
+      MAX_CHARACTERS_SHOWN_IN_PAGE
+    )[0] === ' '
+      ? firstCharacter.nextElementSibling.classList.add(...SPACE_CLASSES)
+      : firstCharacter.nextElementSibling.classList.add(...ACTIVE_CLASSES);
+    firstCharacter.remove();
+    insertCharacter(typedText[typedText.length - 1], outputtedParagraph);
+  } else {
+    firstCharacter.classList.add('error');
+  }
+});

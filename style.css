@@ -6,10 +6,8 @@
 body {
   /* width: 100vw; */
   /* min-height: 100vh; */
-  height: 100vh;
+  height: 100dvh;
   display: flex;
-}
-.timer {
 }
 
 .test-wrapper {
@@ -23,17 +21,12 @@ body {
 
 #generatedParagraph {
   flex: 1;
-  /* flex-basis: 0%; */
 }
 
 #outputtedParagraph {
   max-width: 48%;
-  /* direction: rtl; */
-  /* color: blue; */
 }
-/* #input {
-  max-width: 100%;
-} */
+
 .active::after,
 .space::after {
   position: absolute;
@@ -55,7 +48,6 @@ body {
 .error.active::after,
 .error.space::after {
   background: red;
-  /* color: pink; */
   opacity: 0.4;
   animation: error 1000ms infinite;
 }
