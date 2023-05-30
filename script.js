@@ -1,6 +1,10 @@
 let generatedParagraph = document.getElementById('generatedParagraph');
 let outputtedParagraph = document.getElementById('outputtedParagraph');
-let refresh = document.querySelector('.refresh');
+let errors = document.querySelector('#errors');
+let wordPerMinute = document.querySelector('#wordPerMinute');
+let characterPerMinute = document.querySelector('#characterPerMinute');
+let time = document.querySelector('#time');
+let restart = document.querySelector('.restart');
 
 const LIMIT_OF_GENERATED_PARAGRAPHS = 150;
 const LIMIT_OF_SHOWN_PARAGRAPHS = 8;
@@ -17,6 +21,7 @@ const SPACE_CLASSES = [
 let collectedParagraphsFromApi = [];
 let necessaryParagraphsToShow = [];
 let splittedNecessaryParagraphsToShow = [];
+let splittedOutputtedParagraph = [];
 
 fetch(`https://api.quotable.io/quotes?limit=${LIMIT_OF_GENERATED_PARAGRAPHS}`)
   .then(response => response.json())
@@ -55,6 +60,18 @@ const fillParagraph = splittedParagraphs => {
   });
 };
 
+const resetParameters = () => {
+  input.value = '';
+  errors.textContent = 0;
+  wordPerMinute.textContent = 0;
+  characterPerMinute.textContent = 0;
+  time.textContent = 60;
+  necessaryParagraphsToShow = [];
+  splittedNecessaryParagraphsToShow = [];
+  splittedOutputtedParagraph = [];
+  outputtedParagraph.textContent = '';
+};
+
 const initiateTypingTest = () => {
   generatedParagraph.innerHTML = '';
   extractNecessaryParagraphsToShow();
@@ -64,13 +81,10 @@ const initiateTypingTest = () => {
   );
   generatedParagraph.firstElementChild.classList.add(...ACTIVE_CLASSES);
   input.focus();
-  input.value = '';
 };
 
-refresh.addEventListener('click', () => {
-  necessaryParagraphsToShow = [];
-  splittedNecessaryParagraphsToShow = [];
-  outputtedParagraph.textContent = '';
+restart.addEventListener('click', () => {
+  resetParameters();
   initiateTypingTest();
 });
 
@@ -81,7 +95,7 @@ input.addEventListener('blur', () => {
 input.addEventListener('input', e => {
   const firstCharacter = generatedParagraph.firstChild;
   let typedText = e.target.value;
-  
+
   if (firstCharacter.textContent === typedText[typedText.length - 1]) {
     typedText[typedText.length - 1] === ' '
       ? outputtedParagraph.classList.add('pe-3')
@@ -98,8 +112,13 @@ input.addEventListener('input', e => {
       ? firstCharacter.nextElementSibling.classList.add(...SPACE_CLASSES)
       : firstCharacter.nextElementSibling.classList.add(...ACTIVE_CLASSES);
     firstCharacter.remove();
-    insertCharacter(typedText[typedText.length - 1], outputtedParagraph);
+    splittedOutputtedParagraph.push(typedText[typedText.length - 1]);
+    let ooo = splittedOutputtedParagraph.join('').split(' ').slice(0, -1);
+    wordPerMinute.textContent = ooo.length;
+    characterPerMinute.textContent = ooo.join(' ').length;
+    insertCharacter(splittedOutputtedParagraph.slice(-1), outputtedParagraph);
   } else {
     firstCharacter.classList.add('error');
+    errors.textContent++;
   }
 });

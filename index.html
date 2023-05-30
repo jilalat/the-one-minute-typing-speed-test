@@ -22,20 +22,26 @@
 
 <body class="bg-info bg-opacity-10">
   <main class="container m-auto">
+    <h1 class="text-center mb-5 fw-bold text-primary">Test Your Typing Skills</h1>
     <aside class="fw-semibold text-center">
-      <span class="d-block mb-3">time left : <time class="timer">01:00</time></span>
-      <ul class="list-unstyled d-inline-flex gap-4 ">
-        <li class="">mistakes : <span>888</span></li>
-        <li class="">WPM : <span>888</span></li>
-        <li class="">CPM : <span>888</span></li>
-      </ul>
+      <ul class="list-unstyled row justify-content-center gap-3">
+        <li class="bg-white col-xl-1 col-lg-2 col-md-2 col-sm-2 col-4 border rounded-3 shadow-sm py-3">TIME<time
+              id="time" class="d-block pt-2">60</time></li>
+        <li class="bg-white col-xl-1 col-lg-2 col-md-2 col-sm-2 col-4 border rounded-3 shadow-sm py-3">WPM<span
+            id="wordPerMinute" class="d-block pt-2">0</span></li>
+        <li class="bg-white col-xl-1 col-lg-2 col-md-2 col-sm-2 col-4 border rounded-3 shadow-sm py-3">CPM<span
+            id="characterPerMinute" class="d-block pt-2">0</span></li>
+        <li class="bg-white col-xl-1 col-lg-2 col-md-2 col-sm-2 col-4 border rounded-3 shadow-sm py-3">ERRORS<span
+          id="errors" class="d-block pt-2">0</span></li>
+        </ul>
     </aside>
     <section class="test-wrapper fs-1 fw-medium lh-sm mt-5 mb-4 px-2 d-flex">
       <input type="text" id="input" class="position-absolute bottom-100" autofocus>
       <output id="outputtedParagraph" class="overflow-hidden text-nowrap text-primary d-block" dir="rtl"></output>
-      <p id="generatedParagraph" class="overflow-hidden text-nowrap text-secondary"></p>
+      <p id="generatedParagraph" class="overflow-hidden text-nowrap text-black-50"></p>
     </section>
-    <button class="refresh btn btn-outline-primary fw-semibold mx-auto d-block">Refresh</button>
+    <button class="restart btn btn-outline-primary fw-semibold mx-auto d-block">&#x21bb; Restart</button>
+
   </main>
 </body>
 
