@@ -69,7 +69,8 @@ const fillParagraph = splittedParagraphs => {
 };
 
 const initiateParameters = () => {
-  errors.textContent = 0;
+  // errors.textContent = 0;
+  errors.textContent = window.orientation < 1 ? 'input' : 'keypress';
   wordPerMinute.textContent = 0;
   characterPerMinute.textContent = 0;
   time.textContent = 5;
@@ -127,6 +128,7 @@ input.addEventListener(
   `${window.orientation < 1 ? 'input' : 'keypress'}`,
   e => {
     const firstCharacter = generatedParagraph.firstChild;
+    console.log(window.orientation < 1 ? 'input' : 'keypress');
     console.log(e.key);
     if (firstCharacter.textContent === e.key) {
       splittedOutputtedParagraph.length === 0 && startTimer();
