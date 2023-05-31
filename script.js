@@ -65,9 +65,12 @@ const initiateParameters = () => {
   errors.textContent = 0;
   wordPerMinute.textContent = 0;
   characterPerMinute.textContent = 0;
-  time.textContent = 60;
+  time.textContent = 5;
   generatedParagraph.innerHTML = '';
   input.removeAttribute('readonly');
+  input.focus();
+  generatedParagraph.classList.add("text-black-50")
+  generatedParagraph.classList.remove("text-danger")
 };
 
 const resetParameters = () => {
@@ -86,7 +89,6 @@ const initiateTypingTest = () => {
     splittedNecessaryParagraphsToShow.slice(0, MAX_CHARACTERS_SHOWN_IN_PAGE)
   );
   generatedParagraph.firstElementChild.classList.add(...ACTIVE_CLASSES);
-  input.focus();
 };
 
 let startTimer = () => {
@@ -99,6 +101,9 @@ let ChangeTime = () => {
   } else {
     clearInterval(timer);
     input.setAttribute('readonly', true);
+    generatedParagraph.classList.remove("text-black-50")
+    generatedParagraph.classList.add("text-danger")
+    generatedParagraph.firstElementChild.classList.remove(...ACTIVE_CLASSES);
   }
 };
 
@@ -135,7 +140,7 @@ input.addEventListener('keypress', e => {
     splittedOutputtedParagraph.push(e.key);
 
     let OutputtedWords = splittedOutputtedParagraph.join('').split(' ').slice(0, -1);
-    
+
     wordPerMinute.textContent = OutputtedWords.length;
     characterPerMinute.textContent = OutputtedWords.join(' ').length;
     insertCharacter(splittedOutputtedParagraph.slice(-1), outputtedParagraph);
