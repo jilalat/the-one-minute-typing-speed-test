@@ -69,11 +69,10 @@ const fillParagraph = splittedParagraphs => {
 };
 
 const initiateParameters = () => {
-  // errors.textContent = 0;
-  errors.textContent = window.orientation < 1 ? 'input' : 'keypress';
+  errors.textContent = 0;
   wordPerMinute.textContent = 0;
   characterPerMinute.textContent = 0;
-  time.textContent = 5;
+  time.textContent = 60;
   generatedParagraph.innerHTML = '';
   input.removeAttribute('readonly');
   input.focus();
@@ -109,9 +108,11 @@ let ChangeTime = () => {
   } else {
     clearInterval(timer);
     input.setAttribute('readonly', true);
-    generatedParagraph.classList.remove('text-black-50');
     generatedParagraph.classList.add('text-danger');
-    generatedParagraph.firstElementChild.classList.remove(...FINAL_RESULTS_CLASSES);
+    generatedParagraph.classList.remove('text-black-50');
+    generatedParagraph.firstElementChild.classList.remove(
+      ...FINAL_RESULTS_CLASSES
+    );
   }
 };
 
@@ -128,11 +129,14 @@ input.addEventListener(
   `${window.orientation < 1 ? 'input' : 'keypress'}`,
   e => {
     const firstCharacter = generatedParagraph.firstChild;
-    console.log(window.orientation < 1 ? 'input' : 'keypress');
-    console.log(e.key);
-    if (firstCharacter.textContent === e.key) {
+    const eventTarget =
+      window.orientation < 1
+        ? e.target.value[e.target.value.length - 1]
+        : e.key;
+
+    if (firstCharacter.textContent === eventTarget) {
       splittedOutputtedParagraph.length === 0 && startTimer();
-      e.key === ' '
+      eventTarget === ' '
         ? outputtedParagraph.classList.add('pe-3')
         : outputtedParagraph.classList.remove('pe-3');
       splittedNecessaryParagraphsToShow.shift();
@@ -147,7 +151,7 @@ input.addEventListener(
         ? firstCharacter.nextElementSibling.classList.add(...SPACE_CLASSES)
         : firstCharacter.nextElementSibling.classList.add(...ACTIVE_CLASSES);
       firstCharacter.remove();
-      splittedOutputtedParagraph.push(e.key);
+      splittedOutputtedParagraph.push(eventTarget);
 
       let OutputtedWords = splittedOutputtedParagraph
         .join('')
