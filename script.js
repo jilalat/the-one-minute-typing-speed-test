@@ -70,7 +70,7 @@ const fillParagraph = splittedParagraphs => {
 
 const initiateParameters = () => {
   errors.textContent = 0;
-  wordPerMinute.textContent = 0;
+  wordPerMinute.textContent = window.orientation;
   characterPerMinute.textContent = 0;
   time.textContent = 5;
   generatedParagraph.innerHTML = '';
