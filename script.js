@@ -17,6 +17,13 @@ const SPACE_CLASSES = [
   'ps-3',
   'pe-2',
 ];
+const FINAL_RESULTS_CLASSES = [
+  'active',
+  'space',
+  'position-relative',
+  'd-inline-block',
+  'pe-2',
+];
 
 let collectedParagraphsFromApi = [];
 let necessaryParagraphsToShow = [];
@@ -69,8 +76,8 @@ const initiateParameters = () => {
   generatedParagraph.innerHTML = '';
   input.removeAttribute('readonly');
   input.focus();
-  generatedParagraph.classList.add("text-black-50")
-  generatedParagraph.classList.remove("text-danger")
+  generatedParagraph.classList.add('text-black-50');
+  generatedParagraph.classList.remove('text-danger');
 };
 
 const resetParameters = () => {
@@ -101,9 +108,9 @@ let ChangeTime = () => {
   } else {
     clearInterval(timer);
     input.setAttribute('readonly', true);
-    generatedParagraph.classList.remove("text-black-50")
-    generatedParagraph.classList.add("text-danger")
-    generatedParagraph.firstElementChild.classList.remove(...ACTIVE_CLASSES);
+    generatedParagraph.classList.remove('text-black-50');
+    generatedParagraph.classList.add('text-danger');
+    generatedParagraph.firstElementChild.classList.remove(...FINAL_RESULTS_CLASSES);
   }
 };
 
@@ -116,36 +123,41 @@ restart.addEventListener('click', () => {
 input.addEventListener('blur', () => {
   input.focus();
 });
+input.addEventListener(
+  `${window.orientation > 1 ? 'input' : 'keypress'}`,
+  e => {
+    const firstCharacter = generatedParagraph.firstChild;
+    console.log(e.key);
+    if (firstCharacter.textContent === e.key) {
+      splittedOutputtedParagraph.length === 0 && startTimer();
+      e.key === ' '
+        ? outputtedParagraph.classList.add('pe-3')
+        : outputtedParagraph.classList.remove('pe-3');
+      splittedNecessaryParagraphsToShow.shift();
+      insertCharacter(
+        splittedNecessaryParagraphsToShow[MAX_CHARACTERS_SHOWN_IN_PAGE - 1],
+        generatedParagraph
+      );
+      splittedNecessaryParagraphsToShow.slice(
+        0,
+        MAX_CHARACTERS_SHOWN_IN_PAGE
+      )[0] === ' '
+        ? firstCharacter.nextElementSibling.classList.add(...SPACE_CLASSES)
+        : firstCharacter.nextElementSibling.classList.add(...ACTIVE_CLASSES);
+      firstCharacter.remove();
+      splittedOutputtedParagraph.push(e.key);
 
-input.addEventListener('keypress', e => {
-  const firstCharacter = generatedParagraph.firstChild;
+      let OutputtedWords = splittedOutputtedParagraph
+        .join('')
+        .split(' ')
+        .slice(0, -1);
 
-  if (firstCharacter.textContent === e.key) {
-    splittedOutputtedParagraph.length === 0 && startTimer();
-    e.key === ' '
-      ? outputtedParagraph.classList.add('pe-3')
-      : outputtedParagraph.classList.remove('pe-3');
-    splittedNecessaryParagraphsToShow.shift();
-    insertCharacter(
-      splittedNecessaryParagraphsToShow[MAX_CHARACTERS_SHOWN_IN_PAGE - 1],
-      generatedParagraph
-    );
-    splittedNecessaryParagraphsToShow.slice(
-      0,
-      MAX_CHARACTERS_SHOWN_IN_PAGE
-    )[0] === ' '
-      ? firstCharacter.nextElementSibling.classList.add(...SPACE_CLASSES)
-      : firstCharacter.nextElementSibling.classList.add(...ACTIVE_CLASSES);
-    firstCharacter.remove();
-    splittedOutputtedParagraph.push(e.key);
-
-    let OutputtedWords = splittedOutputtedParagraph.join('').split(' ').slice(0, -1);
-
-    wordPerMinute.textContent = OutputtedWords.length;
-    characterPerMinute.textContent = OutputtedWords.join(' ').length;
-    insertCharacter(splittedOutputtedParagraph.slice(-1), outputtedParagraph);
-  } else {
-    firstCharacter.classList.add('error');
-    errors.textContent++;
+      wordPerMinute.textContent = OutputtedWords.length;
+      characterPerMinute.textContent = OutputtedWords.join(' ').length;
+      insertCharacter(splittedOutputtedParagraph.slice(-1), outputtedParagraph);
+    } else {
+      firstCharacter.classList.add('error');
+      errors.textContent++;
+    }
   }
-});
+);
