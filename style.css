@@ -1,15 +1,3 @@
-/* * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-} */
-body {
-  /* width: 100vw; */
-  /* min-height: 100vh; */
-  height: 100dvh;
-  display: flex;
-}
-
 .test-wrapper {
   font-family: 'Courier Prime', monospace;
 }
@@ -37,14 +25,17 @@ body {
   border-radius: 4px;
   animation: typing 1000ms infinite;
 }
+
 .active::after {
   height: 100%;
   bottom: 0;
 }
+
 .space::after {
   height: 40px;
   bottom: -12px;
 }
+
 .error.active::after,
 .error.space::after {
   background: red;
