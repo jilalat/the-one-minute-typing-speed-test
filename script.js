@@ -70,7 +70,7 @@ const fillParagraph = splittedParagraphs => {
 
 const initiateParameters = () => {
   errors.textContent = 0;
-  wordPerMinute.textContent = window.orientation;
+  wordPerMinute.textContent = 0;
   characterPerMinute.textContent = 0;
   time.textContent = 5;
   generatedParagraph.innerHTML = '';
@@ -124,7 +124,7 @@ input.addEventListener('blur', () => {
   input.focus();
 });
 input.addEventListener(
-  `${window.orientation > 1 ? 'input' : 'keypress'}`,
+  `${window.orientation < 1 ? 'input' : 'keypress'}`,
   e => {
     const firstCharacter = generatedParagraph.firstChild;
     console.log(e.key);
