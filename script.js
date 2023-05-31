@@ -22,6 +22,7 @@ let collectedParagraphsFromApi = [];
 let necessaryParagraphsToShow = [];
 let splittedNecessaryParagraphsToShow = [];
 let splittedOutputtedParagraph = [];
+let timer;
 
 fetch(`https://api.quotable.io/quotes?limit=${LIMIT_OF_GENERATED_PARAGRAPHS}`)
   .then(response => response.json())
@@ -60,12 +61,17 @@ const fillParagraph = splittedParagraphs => {
   });
 };
 
-const resetParameters = () => {
-  input.value = '';
+const initiateParameters = () => {
   errors.textContent = 0;
   wordPerMinute.textContent = 0;
   characterPerMinute.textContent = 0;
   time.textContent = 60;
+  generatedParagraph.innerHTML = '';
+  input.removeAttribute('readonly');
+};
+
+const resetParameters = () => {
+  input.value = '';
   necessaryParagraphsToShow = [];
   splittedNecessaryParagraphsToShow = [];
   splittedOutputtedParagraph = [];
@@ -73,7 +79,7 @@ const resetParameters = () => {
 };
 
 const initiateTypingTest = () => {
-  generatedParagraph.innerHTML = '';
+  initiateParameters();
   extractNecessaryParagraphsToShow();
   splitParagraphs();
   fillParagraph(
@@ -83,21 +89,35 @@ const initiateTypingTest = () => {
   input.focus();
 };
 
+let startTimer = () => {
+  timer = setInterval(ChangeTime, 1000);
+};
+
+let ChangeTime = () => {
+  if (time.textContent > 0) {
+    time.textContent--;
+  } else {
+    clearInterval(timer);
+    input.setAttribute('readonly', true);
+  }
+};
+
 restart.addEventListener('click', () => {
   resetParameters();
   initiateTypingTest();
+  clearInterval(timer);
 });
 
 input.addEventListener('blur', () => {
   input.focus();
 });
 
-input.addEventListener('input', e => {
+input.addEventListener('keypress', e => {
   const firstCharacter = generatedParagraph.firstChild;
-  let typedText = e.target.value;
 
-  if (firstCharacter.textContent === typedText[typedText.length - 1]) {
-    typedText[typedText.length - 1] === ' '
+  if (firstCharacter.textContent === e.key) {
+    splittedOutputtedParagraph.length === 0 && startTimer();
+    e.key === ' '
       ? outputtedParagraph.classList.add('pe-3')
       : outputtedParagraph.classList.remove('pe-3');
     splittedNecessaryParagraphsToShow.shift();
@@ -112,10 +132,12 @@ input.addEventListener('input', e => {
       ? firstCharacter.nextElementSibling.classList.add(...SPACE_CLASSES)
       : firstCharacter.nextElementSibling.classList.add(...ACTIVE_CLASSES);
     firstCharacter.remove();
-    splittedOutputtedParagraph.push(typedText[typedText.length - 1]);
-    let ooo = splittedOutputtedParagraph.join('').split(' ').slice(0, -1);
-    wordPerMinute.textContent = ooo.length;
-    characterPerMinute.textContent = ooo.join(' ').length;
+    splittedOutputtedParagraph.push(e.key);
+
+    let OutputtedWords = splittedOutputtedParagraph.join('').split(' ').slice(0, -1);
+    
+    wordPerMinute.textContent = OutputtedWords.length;
+    characterPerMinute.textContent = OutputtedWords.join(' ').length;
     insertCharacter(splittedOutputtedParagraph.slice(-1), outputtedParagraph);
   } else {
     firstCharacter.classList.add('error');
