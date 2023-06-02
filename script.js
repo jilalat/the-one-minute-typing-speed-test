@@ -6,6 +6,8 @@ let characterPerMinute = document.querySelector('#characterPerMinute');
 let time = document.querySelector('#time');
 let restart = document.querySelector('.restart');
 
+const inputEvent = window.orientation < 1 ? 'input' : 'keypress';
+console.log(inputEvent);
 const LIMIT_OF_GENERATED_PARAGRAPHS = 150;
 const LIMIT_OF_SHOWN_PARAGRAPHS = 8;
 const MAX_CHARACTERS_SHOWN_IN_PAGE = 72;
@@ -125,45 +127,40 @@ restart.addEventListener('click', () => {
 input.addEventListener('blur', () => {
   input.focus();
 });
-input.addEventListener(
-  `${window.orientation < 1 ? 'input' : 'keypress'}`,
-  e => {
-    const firstCharacter = generatedParagraph.firstChild;
-    const eventTarget =
-      window.orientation < 1
-        ? e.target.value[e.target.value.length - 1]
-        : e.key;
+input.addEventListener(inputEvent, e => {
+  const firstCharacter = generatedParagraph.firstChild;
+  const eventTarget =
+    inputEvent === 'input' ? e.target.value[e.target.value.length - 1] : e.key;
 
-    if (firstCharacter.textContent === eventTarget) {
-      splittedOutputtedParagraph.length === 0 && startTimer();
-      eventTarget === ' '
-        ? outputtedParagraph.classList.add('pe-3')
-        : outputtedParagraph.classList.remove('pe-3');
-      splittedNecessaryParagraphsToShow.shift();
-      insertCharacter(
-        splittedNecessaryParagraphsToShow[MAX_CHARACTERS_SHOWN_IN_PAGE - 1],
-        generatedParagraph
-      );
-      splittedNecessaryParagraphsToShow.slice(
-        0,
-        MAX_CHARACTERS_SHOWN_IN_PAGE
-      )[0] === ' '
-        ? firstCharacter.nextElementSibling.classList.add(...SPACE_CLASSES)
-        : firstCharacter.nextElementSibling.classList.add(...ACTIVE_CLASSES);
-      firstCharacter.remove();
-      splittedOutputtedParagraph.push(eventTarget);
+  if (firstCharacter.textContent === eventTarget) {
+    splittedOutputtedParagraph.length === 0 && startTimer();
+    eventTarget === ' '
+      ? outputtedParagraph.classList.add('pe-3')
+      : outputtedParagraph.classList.remove('pe-3');
+    splittedNecessaryParagraphsToShow.shift();
+    insertCharacter(
+      splittedNecessaryParagraphsToShow[MAX_CHARACTERS_SHOWN_IN_PAGE - 1],
+      generatedParagraph
+    );
+    splittedNecessaryParagraphsToShow.slice(
+      0,
+      MAX_CHARACTERS_SHOWN_IN_PAGE
+    )[0] === ' '
+      ? firstCharacter.nextElementSibling.classList.add(...SPACE_CLASSES)
+      : firstCharacter.nextElementSibling.classList.add(...ACTIVE_CLASSES);
+    firstCharacter.remove();
+    splittedOutputtedParagraph.push(eventTarget);
 
-      let OutputtedWords = splittedOutputtedParagraph
-        .join('')
-        .split(' ')
-        .slice(0, -1);
+    let OutputtedWords = splittedOutputtedParagraph
+      .join('')
+      .split(' ')
+      .slice(0, -1);
 
-      wordPerMinute.textContent = OutputtedWords.length;
-      characterPerMinute.textContent = OutputtedWords.join(' ').length;
-      insertCharacter(splittedOutputtedParagraph.slice(-1), outputtedParagraph);
-    } else {
-      firstCharacter.classList.add('error');
-      errors.textContent++;
-    }
+    wordPerMinute.textContent = OutputtedWords.length;
+    characterPerMinute.textContent = OutputtedWords.join(' ').length;
+    insertCharacter(splittedOutputtedParagraph.slice(-1), outputtedParagraph);
+  } else {
+    firstCharacter.classList.add('error');
+    errors.textContent++;
   }
-);
+});
